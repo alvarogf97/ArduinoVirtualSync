@@ -5,6 +5,7 @@
  */
 package arduino;
 
+import java.util.Random;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 import jssc.SerialPortTimeoutException;
@@ -19,6 +20,8 @@ public class SerialPortReader extends Thread{
     private SerialPort sp;
     private volatile boolean EXIT = false;
     private boolean MSG = false;
+    
+    private Random r = new Random();
     
     /**
      * Constructor
@@ -68,10 +71,15 @@ public class SerialPortReader extends Thread{
         
     }
     
+    
+    private void TEST(){
+        user.addMedida(r.nextDouble());
+    }
+    
     @Override
     public void run(){
         while(!EXIT){
-            leerPuertoSerie();
+            TEST();
         }
     }
 }

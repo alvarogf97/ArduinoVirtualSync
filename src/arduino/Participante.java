@@ -15,8 +15,8 @@ import spread.SpreadMessage;
 public class Participante extends ArduinoState{
 
     @Override
-    public void sendMSG(ArduinoUser user, String msg) {
-        System.err.println("Why call sendMSG, I am Participant!");
+    public void sendMSG(ArduinoUser user, String msg){
+        super.sendMSGtoSpread(user.getNombre()+"@"+msg, user.getConnection(), user.getConnectionGroup());
     }
 
     @Override
@@ -45,11 +45,25 @@ public class Participante extends ArduinoState{
     @Override
     public void work(ArduinoUser user) {
         try{
+            sendData(user,"7",user.getMediaPuertoSerie());
             Thread.sleep(500);
             user.checkMSG();
         }catch (SpreadException | InterruptedException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    @Override
+    public void sendData(ArduinoUser user, String grupo, Double media) {
+        if (media != 0 && media != Double.NaN) {
+            System.out.println(user.getINFO() + "enviando datos al lider: " + media);
+            sendMSG(user,"DATA@"+media);
+        }
+    }
+    
+    @Override
+    public boolean isLeader(){
+        return false;
     }
 
 }

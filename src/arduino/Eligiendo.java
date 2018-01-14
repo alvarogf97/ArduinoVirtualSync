@@ -48,6 +48,18 @@ public class Eligiendo extends ArduinoState{
         }
     }
 
+    @Override
+    public void sendData(ArduinoUser user, String grupo, Double media) {
+        //DO-NOTHING
+    }
+
+    @Override
+    public boolean isLeader() {
+        return false;
+    }
+    
+    
+
     
 
 }

@@ -50,13 +50,40 @@ public class MessageReciver extends Thread{
     }
     
     /**
+     * 
+     * @param msg mensaje
+     * @return datos del mensaje
+     */
+    private double getData(SpreadMessage msg){
+        String value = ((new String(msg.getData())).split("@"))[2];
+        return Double.valueOf(value);
+    }
+    
+    /**
      * añadira al usuario en cuestion el mensaje recibido
      * @param msg mensaje recibido
      */
     private void DisplayMessage(SpreadMessage msg){
         if(msg.isRegular() && notMe(msg)){
-            user.addMSGReceived(msg);
+            /*los mensajes de datos nunca llegan, cuando se
+            capturan se añaden a las medidas del lider*/
+            if(msgIsDataValues(msg)){
+                if(user.isLeader()){
+                    user.addDataReceived(getData(msg));
+                }
+            }else{
+                user.addMSGReceived(msg);
+            }
         }
+    }
+    
+    /**
+     * 
+     * @param msg
+     * @return true si msg son datos
+     */
+    private boolean msgIsDataValues(SpreadMessage msg){
+        return ((new String(msg.getData())).split("@"))[1].equals("DATA");
     }
     
     @Override

@@ -16,6 +16,8 @@ import spread.SpreadMessage;
  */
 public abstract class ArduinoState {
     
+    
+    
     /**
      * manda un mensaje 
      * @param msg mensaje a enviar
@@ -53,5 +55,21 @@ public abstract class ArduinoState {
      * @param user usuario
      */
     public abstract void work(ArduinoUser user);
+    
+    /**
+     * envia la informacion al servidor o al lider dependiendo del
+     * estado en el que se encuentre el usuario
+     * @param user usuario que envia los datos
+     * @param grupo grupo de practicas
+     * @param media valor de la media
+     */
+    public abstract void sendData(ArduinoUser user, String grupo, Double media);
+    
+    /**
+     * 
+     * @return true si es lider
+     */
+    public abstract boolean isLeader();
+
     
 }

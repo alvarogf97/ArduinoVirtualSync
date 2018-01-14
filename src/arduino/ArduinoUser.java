@@ -5,11 +5,7 @@
  */
 package arduino;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +33,7 @@ public class ArduinoUser{
     private SpreadGroup group;
     private List<SpreadMessage> mensajes;
     private List<Double> medidas;
+    private List<Double> medidasRecibidas;
     private SerialPort sp;
     private SerialPortReader reader;
     private MessageReciver reciver;
@@ -45,6 +42,7 @@ public class ArduinoUser{
     //para manejar los accesos concurrentes de las hebras
     private Semaphore readerSemaphore;
     private Semaphore reciverSemaphore;
+    private Semaphore reciverDataSemaphore;
     
     
     public void start(){
@@ -73,31 +71,6 @@ public class ArduinoUser{
     }
     
     /**
-     * envia la informacion al servidor
-     * @param grupo grupo de practicas
-     * @param media valor de la media
-     */
-    protected void sendData(String grupo,Double media){
-
-        if(media != 0 && media != Double.NaN){
-            try {
-            System.out.println(INFO + "enviando informacion al servidor");
-            URL url = new URL("http://medicionesdgm.appspot.com/save?id="+grupo
-					+"&valor="+media);
-
-            BufferedReader res = new BufferedReader(new InputStreamReader(url.openStream())); 
-            String line;
-            while ((line = res.readLine()) != null)
-                    System.out.println( INFO + "\033[32mServer response: "+line );	
-
-            } catch (IOException ex) {
-                    System.out.println(ex);
-            }
-        }
-        
-    }
-    
-    /**
      * constructor
      * @param user nombre del usuario
      * @param COM puerto serie para leer datos
@@ -110,8 +83,10 @@ public class ArduinoUser{
         this.port = 0;
         mensajes = new ArrayList<>();
         medidas = new ArrayList<>();
+        medidasRecibidas = new ArrayList<>();
         readerSemaphore = new Semaphore(1,true);
         reciverSemaphore = new Semaphore(1,true);
+        reciverDataSemaphore = new Semaphore(1,true);
         initState(lider);
         initConnection();
         initSerialPort(COM);
@@ -133,8 +108,10 @@ public class ArduinoUser{
         this.port = port;
         mensajes = new ArrayList<>();
         medidas = new ArrayList<>();
+        medidasRecibidas = new ArrayList<>();
         readerSemaphore = new Semaphore(1,true);
         reciverSemaphore = new Semaphore(1,true);
+        reciverDataSemaphore = new Semaphore(1,true);
         initState(lider);
         initConnection();
         initSerialPort(COM);
@@ -163,6 +140,30 @@ public class ArduinoUser{
             reciverSemaphore.release();
         }
         
+    }
+    
+    /**
+     * añade los datos recibidos de los demas usuarios
+     * @param d valor recibido
+     */
+    protected void addDataReceived(double d){
+        try{
+            reciverDataSemaphore.acquire();
+            System.out.println(INFO + "recibido: " + d);
+            medidasRecibidas.add(d);
+        }catch (InterruptedException ex){
+            System.err.println(INFO + "interrupted Thread");
+        }finally{
+            reciverDataSemaphore.release();
+        }
+    }
+    
+    /**
+     * 
+     * @return info del usuario
+     */
+    protected String getINFO(){
+        return INFO;
     }
     
     /**
@@ -210,12 +211,29 @@ public class ArduinoUser{
         try{
             readerSemaphore.acquire();
             media = media();
+            reciverDataSemaphore.acquire();
+            if(medidasRecibidas.size()>0){
+                for(Double d : medidasRecibidas){
+                    media += d;
+                }
+                media = media/(medidasRecibidas.size()+1);
+                medidasRecibidas.clear();
+            }
         } catch (InterruptedException ex) {
             System.err.println(INFO + "interrupted thread");
         }finally{
             readerSemaphore.release();
+            reciverDataSemaphore.release();
         }
         return media;
+    }
+    
+    /**
+     * 
+     * @return true el usuario es lider
+     */
+    protected boolean isLeader(){
+        return estado.isLeader();
     }
     
     /**
