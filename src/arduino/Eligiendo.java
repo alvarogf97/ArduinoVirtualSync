@@ -42,6 +42,7 @@ public class Eligiendo extends ArduinoState{
     public void work(ArduinoUser user) {
         try{
            user.sendELIGIENDO();
+           Thread.sleep(500);
            user.checkMSG(); 
         }catch (SpreadException | InterruptedException ex) {
             System.out.println(ex.getMessage());

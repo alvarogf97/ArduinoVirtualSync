@@ -36,7 +36,7 @@ public class ArduinoUser{
     private List<Double> medidasRecibidas;
     private SerialPort sp;
     private SerialPortReader reader;
-    private MessageReciver reciver;
+    private MessageReceiver reciver;
     private volatile boolean EXIT = false;
     
     //para manejar los accesos concurrentes de las hebras
@@ -323,7 +323,6 @@ public class ArduinoUser{
      */
     protected void sendELIGIENDO() throws InterruptedException{
         estado.sendMSG(this, "ELIGIENDO");
-        Thread.sleep(1000); //esperamos un segundo para comprobar mensajes
     }
     
     /**
@@ -332,7 +331,6 @@ public class ArduinoUser{
      */
     protected void sendVIVO() throws InterruptedException{
         estado.sendMSG(this, "VIVO");
-        Thread.sleep(500); //esperamos medio segundo para volver a mandar datos
     }
     
     /**
@@ -360,7 +358,7 @@ public class ArduinoUser{
      */
     private void initReciver(){
         System.out.println(INFO + "\033[34mestabilizando listener de mensajes");
-        reciver = new MessageReciver(connection, this);
+        reciver = new MessageReceiver(connection, this);
         reciver.start();
     }
    

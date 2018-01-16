@@ -35,7 +35,7 @@ public class VirtualSync {
         ArduinoUser user;
         
         try(Scanner sc = new Scanner(System.in)){
-            System.out.println("\033[31m INFO: Crea un nuevo usuario: ");
+            System.out.println("\033[31mINFO: Crea un nuevo usuario: ");
             System.out.print("\033[32m    Nombre->\033[32m ");
             name = sc.next();
             System.out.print("\033[32m    Puerto serie->\033[30m COM");

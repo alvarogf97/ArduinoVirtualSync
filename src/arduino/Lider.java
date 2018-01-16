@@ -31,9 +31,9 @@ public class Lider extends ArduinoState{
     @Override
     public void work(ArduinoUser user) {
         try{
+           Thread.sleep(500);
            sendData(user,"7", user.getMediaPuertoSerie());
            user.sendVIVO(); 
-           Thread.sleep(100);
         } catch (InterruptedException ex) {
             System.out.println("interruped Thread");
         }

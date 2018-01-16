@@ -41,20 +41,20 @@ public abstract class ArduinoState {
      * @param user usuario que lo manda
      * @param msg mensaje a enviar
      */
-    public abstract void sendMSG(ArduinoUser user, String msg);
+    protected abstract void sendMSG(ArduinoUser user, String msg);
     
     /**
      * trata los mensajes que llegan
      * @param user usuario al que le llega el mensaje
      * @param sm mensaje recibido
      */
-    public abstract void reciveMSG(ArduinoUser user, SpreadMessage sm);
+    protected abstract void reciveMSG(ArduinoUser user, SpreadMessage sm);
     
     /**
      * ejecuta las intrucciones a realizar por el usuario dado
      * @param user usuario
      */
-    public abstract void work(ArduinoUser user);
+    protected abstract void work(ArduinoUser user);
     
     /**
      * envia la informacion al servidor o al lider dependiendo del
@@ -63,13 +63,13 @@ public abstract class ArduinoState {
      * @param grupo grupo de practicas
      * @param media valor de la media
      */
-    public abstract void sendData(ArduinoUser user, String grupo, Double media);
+    protected abstract void sendData(ArduinoUser user, String grupo, Double media);
     
     /**
      * 
      * @return true si es lider
      */
-    public abstract boolean isLeader();
+    protected abstract boolean isLeader();
 
     
 }

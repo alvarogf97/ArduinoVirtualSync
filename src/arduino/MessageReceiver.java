@@ -14,7 +14,7 @@ import spread.SpreadMessage;
  *
  * @author Alvaro
  */
-public class MessageReciver extends Thread{
+public class MessageReceiver extends Thread{
     
     private ArduinoUser user;
     private SpreadConnection connection;
@@ -25,7 +25,7 @@ public class MessageReciver extends Thread{
      * @param connection conexion que se va a inspeccionar en busca de mensajes
      * @param user usuario al que se le añadiran los mensajes recibidos
      */
-    public MessageReciver(SpreadConnection connection, ArduinoUser user){
+    public MessageReceiver(SpreadConnection connection, ArduinoUser user){
         this.connection = connection;
         this.user = user;
     }
