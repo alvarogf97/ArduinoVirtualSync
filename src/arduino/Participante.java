@@ -46,7 +46,7 @@ public class Participante extends ArduinoState{
     public void work(ArduinoUser user) {
         try{
             sendData(user,"7",user.getMediaPuertoSerie());
-            Thread.sleep(500);
+            Thread.sleep(1000);
             user.checkMSG();
         }catch (SpreadException | InterruptedException ex) {
             System.out.println(ex.getMessage());
